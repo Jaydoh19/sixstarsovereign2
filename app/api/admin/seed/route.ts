@@ -6,8 +6,12 @@ export async function POST() {
   const client = await clientPromise;
   const db = client.db();
 
-  const email = "sixstar_admin@gmail.com";
-  const password = "fiPibYa9F6BpjlWI";
+  const email = process.env.ADMIN_EMAIL;
+  const password = process.env.ADMIN_PASSWORD;
+
+  if (!email || !password) {
+    return NextResponse.json({ message: "Missing admin credentials" }, { status: 500 });
+  }
 
   const existingAdmin = await db.collection("admins").findOne({ email });
 
