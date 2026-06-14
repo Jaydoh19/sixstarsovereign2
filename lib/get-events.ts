@@ -8,7 +8,7 @@ export async function getEvents() {
   const events = await db
     .collection("events")
     .find({})
-    .sort({ createdAt: -1 })
+    .sort({ eventDate: 1 })
     .toArray();
 
   return events.map((event) => ({

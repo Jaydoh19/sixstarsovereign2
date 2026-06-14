@@ -7,6 +7,7 @@ type AdminEvent = {
   _id: string;
   title: string;
   date: string;
+  eventDate?: string;
   time: string;
   location: string;
   address: string;
@@ -91,8 +92,19 @@ export default function AdminDashboardClient() {
     return res.json();
   }
 
+  function formatEventDateForInput(date?: string) {
+    if (!date) return "";
+
+    const parsedDate = new Date(date);
+
+    if (Number.isNaN(parsedDate.getTime())) return "";
+
+    return parsedDate.toISOString().split("T")[0];
+  }
+
   async function updateEvent(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
     if (!editingEvent) return;
 
     setLoading(true);
@@ -114,6 +126,7 @@ export default function AdminDashboardClient() {
           id: editingEvent._id,
           title: formData.get("title"),
           date: formData.get("date"),
+          eventDate: formData.get("eventDate"),
           time: formData.get("time"),
           location: formData.get("location"),
           address: formData.get("address"),
@@ -140,6 +153,7 @@ export default function AdminDashboardClient() {
 
   async function updateMedia(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
     if (!editingMedia) return;
 
     setLoading(true);
@@ -206,6 +220,7 @@ export default function AdminDashboardClient() {
         body: JSON.stringify({
           title: formData.get("title"),
           date: formData.get("date"),
+          eventDate: formData.get("eventDate"),
           time: formData.get("time"),
           location: formData.get("location"),
           address: formData.get("address"),
@@ -348,7 +363,7 @@ export default function AdminDashboardClient() {
     <div className="mt-16 flex flex-col gap-12">
       {message && (
         <div
-          className={`fixed left-1/2 top-6 z-100 -translate-x-1/2 border px-6 py-3 text-sm font-bold uppercase shadow-2xl backdrop-blur-md transition-all duration-300 ${
+          className={`fixed left-1/2 top-6 z-[100] -translate-x-1/2 border px-6 py-3 text-sm font-bold uppercase shadow-2xl backdrop-blur-md transition-all duration-300 ${
             message.type === "success"
               ? "border-green-500/30 bg-green-500/10 text-green-400"
               : message.type === "error"
@@ -373,24 +388,35 @@ export default function AdminDashboardClient() {
             required
             className="bg-black p-3"
           />
+
           <input
             name="date"
-            placeholder="Date"
+            placeholder="Display Date ex: June 7th, 2026"
             required
             className="bg-black p-3"
           />
+
+          <input
+            name="eventDate"
+            type="date"
+            required
+            className="bg-black p-3"
+          />
+
           <input
             name="time"
             placeholder="Time"
             required
             className="bg-black p-3"
           />
+
           <input
             name="location"
             placeholder="Location"
             required
             className="bg-black p-3"
           />
+
           <input
             name="address"
             placeholder="Google Maps Address"
@@ -434,12 +460,14 @@ export default function AdminDashboardClient() {
             required
             className="bg-black p-3"
           />
+
           <input
             name="caption"
             placeholder="Caption"
             required
             className="bg-black p-3"
           />
+
           <input
             name="category"
             placeholder="Category"
@@ -617,6 +645,7 @@ export default function AdminDashboardClient() {
                   sizes="(max-width: 768px) 100vw, 40vw"
                   className="object-cover"
                 />
+
                 <div className="absolute inset-0 bg-black/25" />
               </div>
 
@@ -651,16 +680,28 @@ export default function AdminDashboardClient() {
                     />
                   </label>
 
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <label className="flex flex-col gap-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
-                      Date
-                      <input
-                        name="date"
-                        defaultValue={editingEvent.date}
-                        className="border border-white/10 bg-black p-3 text-base font-normal normal-case tracking-normal text-white outline-none focus:border-white/40"
-                      />
-                    </label>
+                  <label className="flex flex-col gap-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
+                    Sorting Date
+                    <input
+                      name="eventDate"
+                      type="date"
+                      defaultValue={formatEventDateForInput(
+                        editingEvent.eventDate,
+                      )}
+                      className="border border-white/10 bg-black p-3 text-base font-normal normal-case tracking-normal text-white outline-none focus:border-white/40"
+                    />
+                  </label>
 
+                  <label className="flex flex-col gap-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
+                    Display Date
+                    <input
+                      name="date"
+                      defaultValue={editingEvent.date}
+                      className="border border-white/10 bg-black p-3 text-base font-normal normal-case tracking-normal text-white outline-none focus:border-white/40"
+                    />
+                  </label>
+
+                  <div className="grid gap-4 sm:grid-cols-2">
                     <label className="flex flex-col gap-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
                       Time
                       <input
@@ -669,16 +710,16 @@ export default function AdminDashboardClient() {
                         className="border border-white/10 bg-black p-3 text-base font-normal normal-case tracking-normal text-white outline-none focus:border-white/40"
                       />
                     </label>
-                  </div>
 
-                  <label className="flex flex-col gap-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
-                    Location
-                    <input
-                      name="location"
-                      defaultValue={editingEvent.location}
-                      className="border border-white/10 bg-black p-3 text-base font-normal normal-case tracking-normal text-white outline-none focus:border-white/40"
-                    />
-                  </label>
+                    <label className="flex flex-col gap-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
+                      Location
+                      <input
+                        name="location"
+                        defaultValue={editingEvent.location}
+                        className="border border-white/10 bg-black p-3 text-base font-normal normal-case tracking-normal text-white outline-none focus:border-white/40"
+                      />
+                    </label>
+                  </div>
 
                   <label className="flex flex-col gap-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
                     Maps Address

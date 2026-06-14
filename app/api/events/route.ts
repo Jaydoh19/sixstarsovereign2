@@ -11,7 +11,7 @@ export async function GET() {
   const events = await db
     .collection("events")
     .find({})
-    .sort({ createdAt: -1 })
+    .sort({ eventDate: 1 })
     .toArray();
 
   return NextResponse.json(events);
@@ -19,15 +19,20 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const session = await getAdminSession();
-  if (!session) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+  if (!session) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
 
   const body = await req.json();
+
   const client = await clientPromise;
   const db = client.db();
 
   const result = await db.collection("events").insertOne({
     title: body.title,
     date: body.date,
+    eventDate: new Date(body.eventDate),
     time: body.time,
     location: body.location,
     address: body.address,
@@ -42,9 +47,13 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
   const session = await getAdminSession();
-  if (!session) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+  if (!session) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
 
   const body = await req.json();
+
   const client = await clientPromise;
   const db = client.db();
 
@@ -54,6 +63,7 @@ export async function PUT(req: Request) {
       $set: {
         title: body.title,
         date: body.date,
+        eventDate: new Date(body.eventDate),
         time: body.time,
         location: body.location,
         address: body.address,
@@ -62,7 +72,7 @@ export async function PUT(req: Request) {
         ...(body.publicId && { publicId: body.publicId }),
         updatedAt: new Date(),
       },
-    }
+    },
   );
 
   return NextResponse.json({ message: "Event updated" });
@@ -70,20 +80,27 @@ export async function PUT(req: Request) {
 
 export async function DELETE(req: Request) {
   const session = await getAdminSession();
-  if (!session) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+  if (!session) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
 
   const { id } = await req.json();
 
   const client = await clientPromise;
   const db = client.db();
 
-  const event = await db.collection("events").findOne({ _id: new ObjectId(id) });
+  const event = await db.collection("events").findOne({
+    _id: new ObjectId(id),
+  });
 
   if (event?.publicId) {
     await cloudinary.uploader.destroy(event.publicId);
   }
 
-  await db.collection("events").deleteOne({ _id: new ObjectId(id) });
+  await db.collection("events").deleteOne({
+    _id: new ObjectId(id),
+  });
 
   return NextResponse.json({ message: "Event deleted" });
 }
