@@ -1,7 +1,7 @@
 
 https://sixstarsovereign2.vercel.app/
 
-https://sixstarsovereigns.com
+sixstarsovereigns.com
 
 
 
