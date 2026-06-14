@@ -36,8 +36,8 @@ const leadership = [
     role: "Treasurer",
     description:
       "Manages the financial aspects of the organization and supports community growth.",
-      instagram: "",
-    instahandle: "",
+      instagram: "https://www.instagram.com/flipflopqueen93/",
+    instahandle: "@flipflopqueen93",
   },
 ];
 
