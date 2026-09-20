@@ -8,7 +8,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative min-h-screen overflow-hidden">
         <Image
-          src="/cider-mill.jpg"
+          src="/cider-mill2.jpg"
           alt="Six Star Sovereigns lineup"
           fill
           priority
