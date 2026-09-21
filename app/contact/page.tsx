@@ -15,7 +15,7 @@ const leadership = [
   {
     id: 2,
     name: "Mike",
-    role: "Vice President / Event Coordinator",
+    role: "Vice President - Operations",
     description:
       "Helps organize meets, cruises, and community events while supporting the vision of the group.",
     instagram: "https://www.instagram.com/f3isti/",
@@ -24,7 +24,7 @@ const leadership = [
   {
     id: 3,
     name: "Andrew",
-    role: "Vice President / Operations",
+    role: "Vice President - Digital Strategy",
     description:
       "Supports community growth and helps maintain the organization behind Six Star Sovereigns.",
     instagram: "https://www.instagram.com/andrewdubois_3/",
@@ -33,7 +33,7 @@ const leadership = [
   {
     id: 4,
     name: "Sam",
-    role: "Treasurer",
+    role: "Event Coordinator / Treasurer",
     description:
       "Manages the financial aspects of the organization and supports community growth.",
       instagram: "https://www.instagram.com/flipflopqueen93/",
